@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Versos Ajenos | Mi Bitácora</title>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Cormorant+Garamond:ital,wght@1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-wood: #3d352d;
+    --kraft: #c5b08e;
+    --kraft-dark: #b19a78;
+    --ink: #3b2f21;
+    --tape-clear: rgba(255, 255, 255, 0.2);
+  }
+
+  body {
+    background-color: var(--bg-wood);
+    background-image: url('https://www.transparenttextures.com/patterns/dark-wood.png');
+    margin: 0;
+    padding: 50px 20px;
+    display: flex;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .notebook-wrapper {
+    max-width: 800px;
+    width: 100%;
+    position: relative;
+    display: flex;
+  }
+
+  /* ── Pestañas Laterales ── */
+  .tabs-container {
+    position: absolute;
+    right: -40px;
+    top: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .tab {
+    width: 60px; height: 40px;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.6rem;
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 0 8px 8px 0;
+    text-decoration: none;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+  }
+
+  .tab-home { background: #b39665; }
+  .tab-poemas { background: #a64d4d; }
+  .tab-musica { background: #5d7a8c; }
+  .tab-libros { background: #8c3b3b; }
+  .tab-favoritos { background: #6d5b46; width: 70px; }
+
+  /* ── Contenedor de Papel Kraft ── */
+  .kraft-page {
+    background: var(--kraft);
+    background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+    width: 100%;
+    min-height: 1000px;
+    padding: 80px 60px;
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.2), 10px 10px 30px rgba(0,0,0,0.5);
+    position: relative;
+    border: 1px solid var(--kraft-dark);
+  }
+
+  /* ── Notas de Versos ── */
+  .scrap-note {
+    background: rgba(255,255,255,0.1);
+    border: 1px dashed rgba(0,0,0,0.1);
+    padding: 30px;
+    margin-bottom: 50px;
+    position: relative;
+    transform: rotate(0.5deg);
+  }
+
+  .tape-top {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%) rotate(2deg);
+    width: 100px;
+    height: 30px;
+    background: var(--tape-clear);
+    backdrop-filter: blur(2px);
+    border-left: 2px solid rgba(255,255,255,0.1);
+    border-right: 2px solid rgba(255,255,255,0.1);
+  }
+
+  .quote-text {
+    font-size: 1.6rem;
+    line-height: 1.5;
+    color: var(--ink);
+    font-style: italic;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .author-tag {
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.8rem;
+    text-align: right;
+    display: block;
+    color: #5a4a3a;
+    text-transform: uppercase;
+  }
+
+  .back-btn {
+    display: inline-block;
+    margin-bottom: 20px;
+    font-family: 'Special Elite';
+    font-size: 0.8rem;
+    color: #fff;
+    text-decoration: none;
+    opacity: 0.7;
+  }
+
+</style>
+</head>
+<body>
+
+<div style="display: flex; flex-direction: column; max-width: 840px; width: 100%;">
+  <a href="blog.html" class="back-btn">← Volver al escritorio</a>
+
+  <div class="notebook-wrapper">
+    <div class="tabs-container">
+      <a href="blog.html" class="tab tab-home">HOME</a>
+      <a href="poemas.html" class="tab tab-poemas">POEMAS</a>
+      <a href="musica.html" class="tab tab-musica">MÚSICA</a>
+      <a href="libros.html" class="tab tab-libros">LIBROS</a>
+      <a href="favoritos.html" class="tab tab-favoritos">FAVORITOS</a>
+    </div>
+
+    <main class="kraft-page">
+      
+      <header style="text-align: center; margin-bottom: 60px;">
+        <h1 style="font-family: 'Special Elite'; font-size: 1.1rem; color: #5a4a3a; border: 1px solid #5a4a3a; display: inline-block; padding: 10px 20px;">ANTOLOGÍA DE SOMBRAS</h1>
+      </header>
+
+      <article class="scrap-note">
+        <div class="tape-top"></div>
+        <div class="quote-text">
+          "Podrá faltarme el aire,<br>
+          el sueño, el canto, el habla,<br>
+          pero no me faltará tu sombra..."
+        </div>
+        <span class="author-tag">— Angel González</span>
+      </article>
+
+      <article class="scrap-note" style="transform: rotate(-1deg);">
+        <div class="tape-top" style="width: 80px; transform: translateX(-50%) rotate(-3deg);"></div>
+        <div class="quote-text">
+          "Ven a dormir conmigo: no haremos el amor.<br>
+          Él nos hará."
+        </div>
+        <span class="author-tag">— Julio Cortázar</span>
+      </article>
+
+      <article class="scrap-note">
+        <div class="tape-top"></div>
+        <div class="quote-text">
+          "Hay que ser muy valiente para vivir con miedo."
+        </div>
+        <span class="author-tag">— Alejandra Pizarnik</span>
+      </article>
+
+    </main>
+  </div>
+</div>
+
+</body>
+</html>

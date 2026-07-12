@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biblioteca | Mi Bitácora</title>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Raleway:wght@300;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-wood: #3d352d;
+    --card-bg: #fdfaf0;
+    --ink: #2c2927;
+    --library-red: #8c3b3b;
+    --pencil-gray: #666;
+  }
+
+  body {
+    background-color: var(--bg-wood);
+    background-image: url('https://www.transparenttextures.com/patterns/dark-wood.png');
+    margin: 0;
+    padding: 50px 20px;
+    display: flex;
+    justify-content: center;
+    font-family: 'Special Elite', sans-serif;
+    cursor: url('https://cdn.cursors-4u.net/previews/da-vinci-s-pen-ac944e9f-32.webp') 32 32, auto !important;
+  }
+
+  .notebook-wrapper {
+    max-width: 800px;
+    width: 100%;
+    position: relative;
+    display: flex;
+  }
+
+  /* ── Pestañas Laterales ── */
+  .tabs-container {
+    position: absolute;
+    right: -40px;
+    top: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .tab {
+    width: 60px; height: 40px;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-size: 0.6rem;
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 0 8px 8px 0;
+    text-decoration: none;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+  }
+
+  .tab-home { background: #b39665; }
+  .tab-poemas { background: #a64d4d; }
+  .tab-musica { background: #5d7a8c; }
+  .tab-libros { background: var(--library-red); width: 70px; }
+  .tab-fotos { background: #4a3b31; }
+  .tab-favoritos { background: #6d5b46; }
+
+  /* ── Contenedor de Fichas ── */
+  .library-drawer {
+    background: #2a241f; /* Simula el cajón de madera oscuro */
+    padding: 40px;
+    width: 100%;
+    min-height: 900px;
+    box-shadow: inset 0 0 50px rgba(0,0,0,0.5), 10px 10px 30px rgba(0,0,0,0.5);
+    border: 8px solid #3d352d;
+  }
+
+  /* ── La Ficha de Biblioteca ── */
+  .book-card {
+    background: var(--card-bg);
+    background-image: radial-gradient(#d4c5a9 1px, transparent 1px);
+    background-size: 20px 20px;
+    padding: 40px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    position: relative;
+    color: var(--ink);
+    border: 1px solid #d4c5a9;
+    transform: rotate(-0.5deg);
+  }
+
+  .book-card::before {
+    content: '';
+    position: absolute;
+    top: 20px; left: 50%;
+    width: 15px; height: 15px;
+    background: #333;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    box-shadow: inset 0 2px 4px rgba(255,255,255,0.3);
+  }
+
+  .card-header {
+    border-bottom: 2px solid var(--library-red);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .call-number { font-size: 0.8rem; color: var(--library-red); font-weight: bold; }
+
+  .book-title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .book-author { font-size: 1rem; margin-bottom: 20px; display: block; }
+
+  .analysis-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    line-height: 1.6;
+    font-style: italic;
+    background: rgba(255,255,255,0.4);
+    padding: 15px;
+    border-left: 2px solid #ccc;
+  }
+
+  .rating {
+    margin-top: 20px;
+    color: var(--gold);
+    font-size: 1.2rem;
+  }
+
+  .back-btn {
+    display: inline-block;
+    margin-bottom: 20px;
+    font-size: 0.8rem;
+    color: #fff;
+    text-decoration: none;
+    opacity: 0.7;
+  }
+
+</style>
+</head>
+<body>
+
+<div style="display: flex; flex-direction: column; max-width: 840px; width: 100%;">
+  <a href="blog.html" class="back-btn">← Volver al escritorio</a>
+
+  <div class="notebook-wrapper">
+    <div class="tabs-container">
+      <a href="blog.html" class="tab tab-home">HOME</a>
+      <a href="poemas.html" class="tab tab-poemas">POEMAS</a>
+      <a href="musica.html" class="tab tab-musica">MÚSICA</a>
+      <a href="libros.html" class="tab tab-libros">LIBROS</a>
+      <a href="fotos.html" class="tab tab-fotos">FOTOS</a>
+      <a href="favoritos.html" class="tab tab-favoritos">FAVORITOS</a>
+    </div>
+
+    <main class="library-drawer">
+      
+      <article class="book-card">
+        <div class="card-header">
+          <span class="call-number">REF-823.91 J</span>
+          <span style="font-size: 0.7rem;">ADQUIRIDO: 2026</span>
+        </div>
+        <h2 class="book-title">Rayuela</h2>
+        <span class="book-author">por Julio Cortázar</span>
+        
+        <div class="analysis-text">
+          "Leer este libro es como jugar a la rayuela con tu propia mente. La estructura fragmentada me hace pensar en cómo guardamos los recuerdos: no en orden, sino por saltos de importancia emocional. La Maga no es un personaje, es un estado de ánimo."
+        </div>
+        
+        <div class="rating">★★★★★</div>
+        <p style="font-size: 0.7rem; margin-top: 15px; color: var(--pencil-gray);">NOTAS: Imprescindible leer el capítulo 68 en voz alta.</p>
+      </article>
+
+      <article class="book-card" style="transform: rotate(0.5deg);">
+        <div class="card-header">
+          <span class="call-number">COD-000.00 X</span>
+        </div>
+        <h2 class="book-title">Título del Libro</h2>
+        <span class="book-author">por Autor del Libro</span>
+        
+        <div class="analysis-text">
+          Aquí va tu análisis o reseña personal. ¿Qué te dejó la historia? ¿Qué frase subrayaste mil veces?
+        </div>
+        
+        <div class="rating">★★★★☆</div>
+      </article>
+
+     <section class="servilleta">
+  <div class="mancha-cafe"></div>
+  <h3 class="servilleta-titulo">Pendientes...</h3>
+  <ul class="lista-pendientes">
+    <li><span>☐</span> "El Aleph" - Borges (relectura)</li>
+    <li><span>☐</span> "Poeta en Nueva York" - Lorca</li>
+    <li><span>☐</span> "La Tregua" - Mario Benedetti</li>
+    <li><span>☐</span> Algún ensayo sobre estética...</li>
+  </ul>
+  <p class="servilleta-nota">Anotado en el café de la esquina el martes lluvioso.</p>
+</section>
+
+<style>
+  .servilleta {
+    background: #fdfdfd;
+    width: 280px;
+    padding: 30px;
+    margin: 60px auto 20px;
+    position: relative;
+    box-shadow: 2px 2px 15px rgba(0,0,0,0.2);
+    /* Efecto de borde roto/irregular de servilleta */
+    clip-path: polygon(
+      0% 2%, 5% 0%, 10% 3%, 15% 1%, 20% 4%, 25% 0%, 30% 2%, 35% 1%, 40% 3%, 45% 0%, 
+      50% 2%, 55% 1%, 60% 4%, 65% 0%, 70% 2%, 75% 1%, 80% 3%, 85% 0%, 90% 2%, 95% 1%, 100% 3%,
+      98% 100%, 0% 97%
+    );
+    transform: rotate(2deg);
+    font-family: 'La Belle Aurore', cursive;
+  }
+
+  .servilleta-titulo {
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.9rem;
+    color: #555;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+  }
+
+  .lista-pendientes {
+    list-style: none;
+    font-size: 1.3rem;
+    color: #333;
+    line-height: 1.4;
+  }
+
+  .lista-pendientes li {
+    margin-bottom: 10px;
+  }
+
+  .lista-pendientes span {
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.8rem;
+    margin-right: 10px;
+    opacity: 0.5;
+  }
+
+  .servilleta-nota {
+    margin-top: 20px;
+    font-size: 0.8rem;
+    opacity: 0.6;
+    font-style: italic;
+  }
+
+  /* Mancha de café sutil */
+  .mancha-cafe {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 80px;
+    height: 80px;
+    border: 3px solid rgba(139, 69, 19, 0.05);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+</style>
+    </main>
+  </div>
+</div>
+
+</body>
+</html>

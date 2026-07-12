@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Directorio de Muros</title>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=La+Belle+Aurore&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --paper: #f4eee1;
+    --ink: #2c2927;
+    --accent-red: #a64d4d;
+    --gold: #b39665;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #3d352d;
+    background-image: url('https://www.transparenttextures.com/patterns/dark-wood.png');
+    font-family: 'Cormorant Garamond', serif;
+    padding: 50px 20px;
+    display: flex;
+    justify-content: center;
+  }
+  .wrap { max-width: 700px; width: 100%; }
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .top-bar button {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.4);
+    color: #fff;
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.7rem;
+    padding: 8px 14px;
+    cursor: pointer;
+  }
+  h1 {
+    font-family: 'La Belle Aurore', cursive;
+    font-size: 3rem;
+    color: var(--paper);
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .lista { display: grid; gap: 16px; }
+  .item {
+    background: var(--paper);
+    padding: 20px 25px;
+    box-shadow: 2px 4px 10px rgba(0,0,0,0.3);
+    text-decoration: none;
+    color: var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .item:hover { transform: translateX(4px); }
+  .username {
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.95rem;
+    color: var(--accent-red);
+  }
+  .ir { font-size: 0.8rem; opacity: 0.5; }
+  .vacio { color: var(--paper); text-align: center; font-family: 'Special Elite', sans-serif; font-size: 0.85rem; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="top-bar">
+    <span></span>
+    <button id="btn-salir">Cerrar sesión</button>
+  </div>
+  <h1>Muros del grupo</h1>
+  <div class="lista" id="lista">Cargando...</div>
+</div>
+
+<script src="supabase-client.js"></script>
+<script>
+  document.getElementById('btn-salir').addEventListener('click', cerrarSesion);
+
+  (async () => {
+    const sesion = await obtenerSesionActual();
+    if (!sesion) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    const { data: perfiles, error } = await supabaseClient
+      .from('perfiles')
+      .select('username, nombre_mostrado')
+      .order('username');
+
+    const lista = document.getElementById('lista');
+
+    if (error) {
+      lista.innerHTML = '<p class="vacio">No pudimos cargar los muros.</p>';
+      return;
+    }
+
+    if (!perfiles || perfiles.length === 0) {
+      lista.innerHTML = '<p class="vacio">Todavía no hay muros creados.</p>';
+      return;
+    }
+
+    lista.innerHTML = perfiles.map(p => `
+      <a class="item" href="muro.html?usuario=${encodeURIComponent(p.username)}">
+        <span class="username">@${p.username}</span>
+        <span class="ir">Ver muro →</span>
+      </a>
+    `).join('');
+  })();
+</script>
+
+</body>
+</html>

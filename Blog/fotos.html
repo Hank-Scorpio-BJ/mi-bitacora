@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recuerdos | Mi Bitácora</title>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=La+Belle+Aurore&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-wood: #3d352d;
+    --box-brown: #5d4a3e;
+    --box-inside: #4a3b31;
+  }
+
+  body {
+    background-color: var(--bg-wood);
+    background-image: url('https://www.transparenttextures.com/patterns/dark-wood.png');
+    margin: 0;
+    padding: 50px 20px;
+    display: flex;
+    justify-content: center;
+    overflow-x: hidden;
+    cursor: url('https://cdn.cursors-4u.net/previews/da-vinci-s-pen-ac944e9f-32.webp') 32 32, auto !important;
+  }
+
+  /* ── Pestañas Laterales ── */
+  .tabs-container {
+    position: absolute;
+    right: -40px;
+    top: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .tab {
+    width: 60px; height: 40px;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.6rem;
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 0 8px 8px 0;
+    text-decoration: none;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+  }
+
+  .tab-home { background: #b39665; }
+  .tab-poemas { background: #a64d4d; }
+  .tab-musica { background: #5d7a8c; }
+  .tab-libros { background: #8c3b3b; }
+  .tab-fotos { background: #4a3b31; width: 70px; }
+  .tab-favoritos { background: #6d5b46;}
+
+  /* ── La Caja de Zapatos ── */
+  .memory-box {
+    background: var(--box-inside);
+    width: 100%;
+    max-width: 900px;
+    min-height: 800px;
+    padding: 60px;
+    position: relative;
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.8), 20px 20px 50px rgba(0,0,0,0.5);
+    border: 15px solid var(--box-brown);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+  }
+
+  .box-label {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #eaddca;
+    padding: 10px 30px;
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.9rem;
+    color: #5d4a3e;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    border: 1px solid #c4b49d;
+  }
+
+  /* ── Las Fotos Polaroid ── */
+  .photo {
+    background: #fff;
+    padding: 15px 15px 45px 15px;
+    width: 250px;
+    box-shadow: 5px 10px 20px rgba(0,0,0,0.4);
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    z-index: 1;
+  }
+
+  .photo img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    filter: sepia(0.3) contrast(1.1);
+  }
+
+  .photo p {
+    font-family: 'La Belle Aurore', cursive;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 1.4rem;
+    color: #333;
+  }
+
+  /* Efecto de desorden */
+  .photo:nth-child(odd) { transform: rotate(-4deg); }
+  .photo:nth-child(even) { transform: rotate(3deg); }
+  .photo:nth-child(3n) { transform: rotate(6deg) translateY(-20px); }
+
+  /* Animación al pasar el mouse */
+  .photo:hover {
+    transform: rotate(0deg) scale(1.1) translateY(-10px);
+    z-index: 10;
+    box-shadow: 15px 20px 35px rgba(0,0,0,0.6);
+  }
+
+  .back-btn {
+    display: inline-block;
+    margin-bottom: 20px;
+    font-family: 'Special Elite';
+    font-size: 0.8rem;
+    color: #fff;
+    text-decoration: none;
+    opacity: 0.7;
+  }
+
+  /* Decoración: Polvo o motas */
+  .dust {
+    position: absolute;
+    inset: 0;
+    background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+    pointer-events: none;
+    opacity: 0.3;
+  }
+
+</style>
+</head>
+<body>
+
+<div style="display: flex; flex-direction: column; max-width: 940px; width: 100%;">
+  <a href="blog.html" class="back-btn">← Volver al escritorio</a>
+
+  <div style="position: relative; display: flex;">
+    <div class="tabs-container">
+      <a href="blog.html" class="tab tab-home">HOME</a>
+      <a href="poemas.html" class="tab tab-poemas">POEMAS</a>
+      <a href="musica.html" class="tab tab-musica">MÚSICA</a>
+      <a href="libros.html" class="tab tab-libros">LIBROS</a>
+      <a href="fotos.html" class="tab tab-fotos">FOTOS</a>
+      <a href="favoritos.html" class="tab tab-favoritos">FAVORITOS</a>
+    </div>
+
+    <main class="memory-box">
+      <div class="dust"></div>
+      <div class="box-label">RECUERDOS NO REVELADOS</div>
+
+      <div class="photo">
+        <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=400" alt="Paisaje">
+        <p>Amanecer en el sur</p>
+      </div>
+
+      <div class="photo">
+        <img src="https://images.unsplash.com/photo-1493134795711-b4d4a34b2f42?q=80&w=400" alt="Café">
+        <p>Aquel café de martes</p>
+      </div>
+
+      <div class="photo">
+        <img src="https://images.unsplash.com/photo-1526726533691-1188152bb8f1?q=80&w=400" alt="Libros">
+        <p>Páginas subrayadas</p>
+      </div>
+
+      <div class="photo">
+        <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=400" alt="Ventana">
+        <p>La luz de tu ventana</p>
+      </div>
+
+      <div class="photo">
+        <img src="https://images.unsplash.com/photo-1518199266791-739d6ffecda6?q=80&w=400" alt="Cielo">
+        <p>Nubes de algodón</p>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+</body>
+</html>
