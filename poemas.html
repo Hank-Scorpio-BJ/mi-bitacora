@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escritos del Alma | Mi Bitácora</title>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=La+Belle+Aurore&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-wood: #3d352d;
+    --paper: #ffffff;
+    --line-blue: #e1eef4;
+    --margin-red: rgba(255,0,0,0.2);
+    --ink: #2c2927;
+    --accent: #a64d4d;
+  }
+
+  body {
+    background-color: var(--bg-wood);
+    background-image: url('https://www.transparenttextures.com/patterns/dark-wood.png');
+    margin: 0;
+    padding: 50px 20px;
+    display: flex;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    cursor: url('https://cdn.cursors-4u.net/previews/da-vinci-s-pen-ac944e9f-32.webp') 32 32, auto !important;
+  }
+
+  /* ── Contenedor de la Carpeta ── */
+  .notebook-wrapper {
+    max-width: 800px;
+    width: 100%;
+    position: relative;
+    display: flex;
+  }
+
+  /* ── Pestañas Laterales (Separadores) ── */
+  .tabs-container {
+    position: absolute;
+    right: -40px;
+    top: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 0;
+  }
+
+  .tab {
+    width: 60px;
+    height: 40px;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.6rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    text-decoration: none;
+  }
+
+  .tab-home { background: #b39665; }
+  .tab-poemas { background: #a64d4d; width: 70px; } /* Pestaña activa un poco más larga */
+  .tab-musica { background: #5d7a8c; }
+  .tab-libros { background: #8c3b3b; } 
+  .tab-fotos { background: #4a3b31; }
+  .tab-favoritos { background: #6d5b46; }
+  .tab:hover { width: 75px; }
+
+  /* ── La Hoja de Papel ── */
+  .sheet {
+    background: var(--paper);
+    background-image: linear-gradient(var(--line-blue) 1px, transparent 1px);
+    background-size: 100% 1.6em;
+    width: 100%;
+    min-height: 1000px;
+    padding: 80px 60px 60px 100px;
+    box-shadow: 10px 10px 30px rgba(0,0,0,0.5);
+    position: relative;
+    z-index: 1;
+    border-radius: 2px;
+  }
+
+  /* Margen Rojo Vertical */
+  .sheet::before {
+    content: '';
+    position: absolute;
+    left: 85px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--margin-red);
+  }
+
+  /* Anillas de la Carpeta */
+  .rings {
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 40px 0;
+  }
+
+  .ring {
+    width: 40px;
+    height: 12px;
+    background: linear-gradient(to bottom, #777, #bbb, #777);
+    border-radius: 10px;
+    box-shadow: inset 0 2px 2px rgba(255,255,255,0.5), 2px 2px 4px rgba(0,0,0,0.3);
+  }
+
+  /* ── Estilo de los Poemas ── */
+  .entry {
+    margin-bottom: 80px;
+    position: relative;
+  }
+
+  .date {
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.75rem;
+    color: #888;
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .title {
+    font-family: 'La Belle Aurore', cursive;
+    font-size: 2.5rem;
+    color: var(--accent);
+    margin: 0 0 20px 0;
+  }
+
+  .poem-body {
+    font-size: 1.4rem;
+    line-height: 1.6em;
+    color: var(--ink);
+    font-style: italic;
+  }
+
+  .footnote {
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.65rem;
+    margin-top: 15px;
+    opacity: 0.6;
+    text-align: right;
+  }
+
+  /* Decoración: Clips o cinta */
+  .clip {
+    position: absolute;
+    top: -20px;
+    right: 20px;
+    width: 40px;
+    opacity: 0.8;
+  }
+
+  .back-btn {
+    display: inline-block;
+    margin-bottom: 20px;
+    font-family: 'Special Elite';
+    font-size: 0.8rem;
+    color: #fff;
+    text-decoration: none;
+    opacity: 0.6;
+  }
+  .back-btn:hover { opacity: 1; }
+
+</style>
+</head>
+<body>
+
+<div style="display: flex; flex-direction: column; align-items: flex-start; max-width: 840px; width: 100%;">
+  <a href="blog.html" class="back-btn">← Volver al escritorio</a>
+
+  <div class="notebook-wrapper">
+    <div class="tabs-container">
+      <a href="blog.html" class="tab tab-home">HOME</a>
+      <a href="poemas.html" class="tab tab-poemas">POEMAS</a>
+      <a href="musica.html" class="tab tab-musica">MUSICA</a>
+      <a href="libros.html" class="tab tab-libros">LIBROS</a>
+      <a href="fotos.html" class="tab tab-fotos">FOTOS</a>
+      <a href="favoritos.html" class="tab tab-favoritos">FAVORITOS</a>
+    </div>
+
+    <main class="sheet">
+      <div class="rings">
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="ring"></div>
+      </div>
+
+      <article class="entry">
+        <span class="date">09 de Abril, 2026</span>
+        <h2 class="title">Androide</h2>
+        <div class="poem-body">
+         ¿Para qué sirvo?<br>
+         Hoy<br>
+         parezco no existir.<br>
+         Voy por la calle<br>
+         con mis manos<br>
+         metidas en el bolsillo,<br>
+         la cabeza cabizbaja,<br>
+         pero cuando miro de reojo<br>
+         para arriba,<br>
+         espiando,<br>
+         los veo a ellos,<br>
+         a las demás personas.<br><br>
+
+Nada parecidas a mí,<br>
+con la cabeza en alto,<br>
+saludando a todos<br>
+con una sonrisa<br>
+perfecta, casi.<br><br>
+
+Parecen seres nuevos,<br>
+asombrados con el mundo,<br>
+ven y escuchan todo.<br><br>
+
+Pero no a mí.<br><br>
+
+No sé qué tendré yo<br>
+que ya nadie me mira.<br>
+Si alguna vez lo hicieron<br>
+— tal vez cuando era niño —<br>
+ahora no se atreven.<br>
+Con esfuerzo los miro<br>
+pero sus ojos<br>
+frente a mí<br>
+no se atreven a verme.<br><br>
+
+Me volví invisible.<br><br>
+
+Para ellos,<br>
+para el mundo,<br>
+ya no soy un ser,<br>
+no soy digno ni de ser visto.<br><br>
+
+¿Pero quién me causó esto<br>
+que ya ni mis pares me ven?<br><br>
+
+Pero no.<br>
+No puede ser.<br>
+Aún hay<br>
+alguien<br>
+en todo el mundo<br>
+que me ve.<br>
+Aunque no a mí —<br>
+me ve todos los días<br>
+pero ya no soy alguien,<br>
+mejor algo,<br>
+así suele decir.<br><br>
+
+Ya no me ve como<br>
+una persona con sentimientos,<br>
+ni siquiera vio<br>
+ni una de mis cicatrices.<br>
+Solo ve mis brazos<br>
+y les grita.<br>
+¿Por qué?<br><br>
+
+Ni oídos tienen.<br>
+Bien sabido es<br>
+que los brazos no reclaman.<br><br>
+
+Y yo tampoco puedo —<br>
+mis palabras<br>
+él no las oye.<br><br>
+
+Aunque sé<br>
+que no soy esto.<br>
+Que podría enfrentarlo.<br>
+Pero se encuentra tan arriba<br>
+que ni levantando<br>
+esta cabeza<br>
+que hace tiempo mira al suelo<br>
+podré verlo.<br><br>
+
+A él,<br>
+que me mira<br>
+con desprecio,<br>
+o peor,<br>
+con lástima.<br><br>
+
+Y él lo sabe.<br>
+Sabe cómo me condiciona,<br>
+cómo influye en mi vida,<br>
+cómo puede hacer llover<br>
+solo escupiendo en mí.<br><br>
+
+Ya sabe<br>
+que al gritar<br>
+obedeceré<br>
+como una máquina.<br><br>
+
+Me oxidaré<br>
+si sigue cayendo<br>
+su lluvia sobre mí.<br>
+Manchas naranjas,<br>
+porosas,<br>
+ya aparecieron en mi cara.<br><br>
+
+Pero mis brazos,<br>
+mis manos,<br>
+se encuentran limpias.<br><br>
+
+Su deseo se hará realidad<br>
+y quedará<br>
+de mí<br>
+solo lo que sirve<br>
+para él.<br>
+        </div>
+        <div class="footnote">Escrito en un consultorio.</div>
+      </article>
+
+      <article class="entry">
+        <span class="date">07 de Abril, 2026</span>
+        <h2 class="title">Brevedad del eco</h2>
+        <div class="poem-body">
+          La voz se deshace en el aire frío,<br>
+          como un hilo de humo que busca el techo.<br>
+          Lo que fuimos, lo que es mío,<br>
+          se guarda despacio dentro del pecho.<br><br>
+          No hay rima que cure la ausencia,<br>
+          ni verso que detenga el reloj,<br>
+          solo queda la frágil paciencia<br>
+          de quien escribe para no decir adiós.
+        </div>
+        <div class="footnote">Escrito a las 2:00 AM bajo la luz de la lámpara roja.</div>
+      </article>
+
+      <article class="entry">
+        <span class="date">28 de Marzo, 2026</span>
+        <h2 class="title">Alelíes en el viento</h2>
+        <div class="poem-body">
+          Tus ojos tienen el color de la espera,<br>
+          un matiz de lluvia y de sol naciente.<br>
+          Si pudiera atrapar la primavera,<br>
+          te la daría, toda, de repente.
+        </div>
+        <div class="footnote">Inspirado en la última tarde en el jardín.</div>
+      </article>
+
+      <p style="text-align: center; opacity: 0.2; font-size: 2rem;">❦</p>
+
+    </main>
+  </div>
+</div>
+
+</body>
+</html>

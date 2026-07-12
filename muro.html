@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muro | Mi Bitácora</title>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=La+Belle+Aurore&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --bg-wood: #3d352d;
+    --paper: #ffffff;
+    --line-blue: #e1eef4;
+    --margin-red: rgba(255,0,0,0.2);
+    --ink: #2c2927;
+    --accent: #a64d4d;
+    --gold: #b39665;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background-color: var(--bg-wood);
+    background-image: url('https://www.transparenttextures.com/patterns/dark-wood.png');
+    margin: 0;
+    padding: 50px 20px;
+    display: flex;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+  }
+  .wrapper { max-width: 840px; width: 100%; }
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  .back-btn, .accion-btn {
+    font-family: 'Special Elite';
+    font-size: 0.8rem;
+    color: #fff;
+    text-decoration: none;
+    opacity: 0.75;
+    background: none;
+    border: 1px solid rgba(255,255,255,0.4);
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+  .sheet {
+    background: var(--paper);
+    background-image: linear-gradient(var(--line-blue) 1px, transparent 1px);
+    background-size: 100% 1.6em;
+    width: 100%;
+    min-height: 500px;
+    padding: 60px 60px 60px 90px;
+    box-shadow: 10px 10px 30px rgba(0,0,0,0.5);
+    position: relative;
+  }
+  .sheet::before {
+    content: '';
+    position: absolute;
+    left: 70px; top: 0; bottom: 0; width: 1px;
+    background: var(--margin-red);
+  }
+  .dueno {
+    font-family: 'La Belle Aurore', cursive;
+    font-size: 2.8rem;
+    color: var(--accent);
+    margin: 0 0 40px;
+  }
+  .entry { margin-bottom: 60px; position: relative; }
+  .date {
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.75rem;
+    color: #888;
+    display: block;
+    margin-bottom: 5px;
+  }
+  .title {
+    font-family: 'La Belle Aurore', cursive;
+    font-size: 2.2rem;
+    color: var(--accent);
+    margin: 0 0 15px 0;
+  }
+  .poem-body {
+    font-size: 1.3rem;
+    line-height: 1.6em;
+    color: var(--ink);
+    font-style: italic;
+    white-space: pre-line;
+  }
+  .footnote {
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.65rem;
+    margin-top: 12px;
+    opacity: 0.6;
+    text-align: right;
+  }
+  .vacio {
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.85rem;
+    color: #999;
+    text-align: center;
+    padding: 60px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="top-bar">
+    <a href="directorio.html" class="back-btn">← Todos los muros</a>
+    <a id="btn-agregar" href="agregar-poema.html" class="accion-btn" style="display:none; text-decoration:none;">+ Agregar poema</a>
+  </div>
+
+  <main class="sheet">
+    <h1 class="dueno" id="nombre-dueno">Cargando...</h1>
+    <div id="contenedor-poemas"></div>
+  </main>
+</div>
+
+<script src="supabase-client.js"></script>
+<script>
+  (async () => {
+    const params = new URLSearchParams(window.location.search);
+    const username = params.get('usuario');
+    const contenedor = document.getElementById('contenedor-poemas');
+    const nombreDueno = document.getElementById('nombre-dueno');
+
+    if (!username) {
+      nombreDueno.textContent = "Muro no encontrado";
+      contenedor.innerHTML = '<p class="vacio">Agregá ?usuario=nombre a la URL, o entrá desde el directorio.</p>';
+      return;
+    }
+
+    // Buscamos el perfil dueño de este muro
+    const { data: perfil, error: errorPerfil } = await supabaseClient
+      .from('perfiles')
+      .select('id, username, nombre_mostrado')
+      .eq('username', username)
+      .single();
+
+    if (errorPerfil || !perfil) {
+      nombreDueno.textContent = "Muro no encontrado";
+      contenedor.innerHTML = '<p class="vacio">No existe un muro con ese nombre de usuario.</p>';
+      return;
+    }
+
+    nombreDueno.textContent = perfil.nombre_mostrado || perfil.username;
+
+    // Si el visitante logueado es el dueño, mostramos botón de agregar
+    const sesion = await obtenerSesionActual();
+    if (sesion && sesion.user.id === perfil.id) {
+      document.getElementById('btn-agregar').style.display = 'inline-block';
+    }
+
+    // Traemos los poemas de ese usuario
+    const { data: poemas, error: errorPoemas } = await supabaseClient
+      .from('poemas')
+      .select('titulo, fecha, texto, nota, creado_en')
+      .eq('user_id', perfil.id)
+      .order('creado_en', { ascending: false });
+
+    if (errorPoemas || !poemas || poemas.length === 0) {
+      contenedor.innerHTML = '<p class="vacio">Todavía no hay poemas en este muro.</p>';
+      return;
+    }
+
+    contenedor.innerHTML = poemas.map(p => `
+      <article class="entry">
+        <span class="date">${p.fecha || ''}</span>
+        <h2 class="title">${p.titulo}</h2>
+        <div class="poem-body">${p.texto}</div>
+        ${p.nota ? `<div class="footnote">${p.nota}</div>` : ''}
+      </article>
+    `).join('');
+  })();
+</script>
+
+</body>
+</html>

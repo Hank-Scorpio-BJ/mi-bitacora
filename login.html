@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entrar | Muros</title>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=La+Belle+Aurore&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --paper: #f4eee1;
+    --ink: #2c2927;
+    --accent-red: #a64d4d;
+    --gold: #b39665;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #3d352d;
+    background-image: url('https://www.transparenttextures.com/patterns/dark-wood.png');
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    padding: 20px;
+  }
+  .card {
+    background: var(--paper);
+    max-width: 420px;
+    width: 100%;
+    padding: 50px 40px;
+    box-shadow: 3px 5px 20px rgba(0,0,0,0.4);
+    position: relative;
+  }
+  .card h1 {
+    font-family: 'La Belle Aurore', cursive;
+    font-size: 2.6rem;
+    color: var(--accent-red);
+    text-align: center;
+    margin: 0 0 5px;
+  }
+  .subtitle {
+    text-align: center;
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.65rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+  }
+  label {
+    display: block;
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.7rem;
+    color: #666;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    margin-top: 18px;
+  }
+  input {
+    width: 100%;
+    padding: 10px 12px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    border: 1px solid #d4c5a9;
+    background: #fffdf8;
+    color: var(--ink);
+  }
+  input:focus { outline: 2px solid var(--gold); }
+  .btn {
+    width: 100%;
+    margin-top: 28px;
+    padding: 12px;
+    background: var(--accent-red);
+    color: white;
+    border: none;
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .btn:hover { opacity: 0.9; }
+  .switch {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+  }
+  .switch a { color: var(--accent-red); cursor: pointer; text-decoration: underline; }
+  .mensaje {
+    margin-top: 16px;
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.75rem;
+    text-align: center;
+    min-height: 1.2em;
+  }
+  .mensaje.error { color: #a64d4d; }
+  .mensaje.ok { color: #4d7a4d; }
+  .oculto { display: none; }
+</style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>Muros</h1>
+    <p class="subtitle">Tu bitácora, tu espacio</p>
+
+    <!-- FORM: INICIAR SESIÓN -->
+    <form id="form-login">
+      <label for="login-email">Correo</label>
+      <input type="email" id="login-email" required>
+      <label for="login-pass">Contraseña</label>
+      <input type="password" id="login-pass" required>
+      <button type="submit" class="btn">Entrar</button>
+    </form>
+
+    <!-- FORM: REGISTRARSE (oculto al inicio) -->
+    <form id="form-registro" class="oculto">
+      <label for="reg-username">Nombre de usuario (para tu muro, sin espacios)</label>
+      <input type="text" id="reg-username" pattern="[a-z0-9_-]+" required placeholder="ej: juanp">
+      <label for="reg-email">Correo</label>
+      <input type="email" id="reg-email" required>
+      <label for="reg-pass">Contraseña</label>
+      <input type="password" id="reg-pass" required minlength="6">
+      <button type="submit" class="btn">Crear mi muro</button>
+    </form>
+
+    <p class="mensaje" id="mensaje"></p>
+
+    <p class="switch">
+      <span id="texto-switch">¿No tenés cuenta?</span>
+      <a id="link-switch">Registrate acá</a>
+    </p>
+  </div>
+
+<script src="supabase-client.js"></script>
+<script>
+  const formLogin = document.getElementById('form-login');
+  const formRegistro = document.getElementById('form-registro');
+  const mensaje = document.getElementById('mensaje');
+  const linkSwitch = document.getElementById('link-switch');
+  const textoSwitch = document.getElementById('texto-switch');
+  let modoRegistro = false;
+
+  // Si ya hay sesión activa, mandamos directo al directorio
+  obtenerSesionActual().then((s) => {
+    if (s) window.location.href = "directorio.html";
+  });
+
+  linkSwitch.addEventListener('click', () => {
+    modoRegistro = !modoRegistro;
+    formLogin.classList.toggle('oculto', modoRegistro);
+    formRegistro.classList.toggle('oculto', !modoRegistro);
+    textoSwitch.textContent = modoRegistro ? "¿Ya tenés cuenta?" : "¿No tenés cuenta?";
+    linkSwitch.textContent = modoRegistro ? "Iniciá sesión" : "Registrate acá";
+    mensaje.textContent = "";
+  });
+
+  function mostrarMensaje(texto, tipo) {
+    mensaje.textContent = texto;
+    mensaje.className = "mensaje " + tipo;
+  }
+
+  formLogin.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('login-email').value.trim();
+    const pass = document.getElementById('login-pass').value;
+
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password: pass });
+    if (error) {
+      mostrarMensaje("No pudimos iniciar sesión: " + error.message, "error");
+      return;
+    }
+    window.location.href = "directorio.html";
+  });
+
+  formRegistro.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('reg-username').value.trim().toLowerCase();
+    const email = document.getElementById('reg-email').value.trim();
+    const pass = document.getElementById('reg-pass').value;
+
+    // 1. Crear la cuenta
+    const { data, error } = await supabaseClient.auth.signUp({ email, password: pass });
+    if (error) {
+      mostrarMensaje("No pudimos crear la cuenta: " + error.message, "error");
+      return;
+    }
+
+    // 2. Crear el perfil público asociado (con el username elegido)
+    const userId = data.user?.id;
+    if (userId) {
+      const { error: errorPerfil } = await supabaseClient
+        .from('perfiles')
+        .insert({ id: userId, username, nombre_mostrado: username });
+
+      if (errorPerfil) {
+        mostrarMensaje("Cuenta creada, pero ese nombre de usuario ya existe. Iniciá sesión y probá cambiarlo.", "error");
+        return;
+      }
+    }
+
+    mostrarMensaje("¡Cuenta creada! Revisá tu correo para confirmar (si tu proyecto lo requiere) y luego iniciá sesión.", "ok");
+  });
+</script>
+
+</body>
+</html>

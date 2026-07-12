@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bitácora Personal | Scrapbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=La+Belle+Aurore&family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Raleway:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f4eee1;
+    --paper-dark: #e8dfcc;
+    --ink: #2c2927;
+    --accent-red: #a64d4d;
+    --accent-blue: #5d7a8c;
+    --gold: #b39665;
+    --tape: rgba(210, 180, 140, 0.3);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: #3d352d;
+    background-image: url('https://www.transparenttextures.com/patterns/dark-wood.png');
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', serif;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    cursor: url('https://cdn.cursors-4u.net/previews/da-vinci-s-pen-ac944e9f-32.webp') 32 32, auto !important;
+  }
+
+  .desk-surface {
+    max-width: 1100px;
+    width: 100%;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  .paper-clip {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 60px;
+  border: 3px solid #999;
+  border-radius: 10px;
+  background: transparent;
+  z-index: 10;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+}
+
+.paper-clip::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 5px;
+  right: 5px;
+  bottom: 10px;
+  border: 2px solid #bbb;
+  border-radius: 5px;
+}
+
+  /* ── ESTA ES LA CORRECCIÓN ── */
+  .grid-full-width {
+    grid-column: 1 / -1;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .grid-half-width {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  /* ── Título Principal (Papel rasgado) ── */
+  .main-header {
+    grid-column: 1 / -1;
+    background: var(--paper);
+    padding: 40px;
+    text-align: center;
+    box-shadow: 2px 5px 15px rgba(0,0,0,0.3);
+    clip-path: polygon(0% 0%, 100% 0%, 100% 95%, 95% 100%, 80% 98%, 60% 100%, 40% 97%, 20% 100%, 0% 96%);
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .main-header h1 {
+    font-family: 'La Belle Aurore', cursive;
+    font-size: 4rem;
+    color: var(--accent-red);
+  }
+
+  /* ── SECCIÓN 1: MIS POEMAS (Hoja de Cuaderno) ── */
+  .section-poemas {
+    background: #fff;
+    background-image: linear-gradient(#e1eef4 1px, transparent 1px);
+    background-size: 100% 1.5em;
+    padding: 60px 40px 40px;
+    box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+    transform: rotate(-1deg);
+    position: relative;
+  }
+
+  .section-poemas::before { /* Margen rojo de cuaderno */
+    content: ''; position: absolute; left: 30px; top: 0; bottom: 0; width: 1px; background: rgba(255,0,0,0.2);
+  }
+
+  .label { font-family: 'Special Elite', sans-serif; font-size: 0.7rem; color: var(--gold); text-transform: uppercase; margin-bottom: 10px; display: block; }
+
+  /* ── SECCIÓN 2: MÚSICA & RESEÑAS (Recorte de Periódico) ── */
+  .section-musica {
+    background: #f0f0f0;
+    padding: 30px;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.15);
+    transform: rotate(1deg);
+    border: 1px solid #ddd;
+  }
+
+  .album-art {
+    width: 100px; height: 100px; background: #333; float: left; margin: 0 15px 10px 0;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+  }
+
+  /* ── SECCIÓN 3: LIBROS & ANÁLISIS (Ficha de Biblioteca) ── */
+  .section-libros {
+    background: #fdfaf0;
+    border: 1px solid #d4c5a9;
+    padding: 25px;
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.05);
+    font-family: 'Special Elite', typewriter;
+  }
+
+  .book-entry { border-bottom: 1px solid #eee; margin-bottom: 15px; padding-bottom: 10px; }
+  .book-title { font-weight: bold; color: var(--accent-blue); display: block; }
+
+  /* ── SECCIÓN 4: GALERÍA DE FOTOS (Polaroids) ── */
+  .section-fotos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin: 40px 0;
+  }
+
+  .polaroid {
+    background: white; padding: 10px 10px 30px 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    width: 220px; transition: 0.3s;
+    cursor: pointer;
+  }
+  .polaroid:hover { transform: scale(1.05) rotate(0deg) !important; z-index: 10; }
+  .polaroid img { width: 100%; height: 180px; object-fit: cover; filter: sepia(0.2); }
+  .polaroid p { font-family: 'La Belle Aurore', cursive; text-align: center; margin-top: 10px; font-size: 1.2rem; }
+
+  /* ── SECCIÓN 5: POEMAS QUE ME GUSTAN (Papel Kraft) ── */
+  .section-favoritos {
+    background: #c5b08e;
+    padding: 30px;
+    box-shadow: inset 0 0 50px rgba(0,0,0,0.1), 3px 3px 10px rgba(0,0,0,0.2);
+    color: #4a3b2b;
+    transform: rotate(-0.5deg);
+  }
+
+  /* ── Decoraciones ── */
+  .tape-decoration {
+    position: absolute; width: 80px; height: 25px; background: var(--tape);
+    top: -10px; left: 20px; transform: rotate(-5deg);
+  }
+
+  .stamp {
+    position: absolute; right: 20px; top: 20px; width: 60px; height: 60px;
+    border: 3px double var(--accent-red); border-radius: 50%;
+    color: var(--accent-red); display: flex; align-items: center; justify-content: center;
+    font-family: 'Special Elite'; font-size: 0.6rem; text-align: center;
+    transform: rotate(15deg); opacity: 0.6;
+  }
+
+  @media (max-width: 800px) {
+    .desk-surface { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="desk-surface">
+  
+  <header class="main-header">
+    <div class="stamp">ARCHIVADO<br>2026</div>
+    <h1>El Jardín de los Ecos</h1>
+    <p style="font-family: 'Special Elite'; letter-spacing: 2px;">POESÍA • PENSAMIENTOS • REGISTROS</p>
+  </header>
+
+  <a href="poemas.html" class="grid-half-width">
+    <section class="section-poemas">
+      <div class="tape-decoration"></div>
+      <span class="label">Escritos del alma</span>
+      <h2 style="margin-bottom: 20px; font-style: italic;">Fragmentos de Insomnio</h2>
+      <p>Tocá aquí para abrir mi cuaderno de poemas...</p>
+    </section>
+  </a>
+
+  <a href="musica.html" class="grid-half-width">
+    <section class="section-musica" style="position: relative;">
+      <div class="paper-clip"></div>
+
+      <span class="label">Frecuencias & Crítica</span>
+      <div style="overflow: hidden; margin-top: 15px;">
+        <div class="album-art">
+          <img src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=100&h=100&fit=crop" alt="Vinyl">
+        </div>
+        <h3 style="font-family: 'Raleway', sans-serif; font-size: 1rem;">Música para deshacer nudos</h3>
+        <p style="font-size: 0.9rem; line-height: 1.4; margin-top: 5px;">
+          Esta semana el Jazz de los 50 ha sido mi refugio. Hay algo en las notas imperfectas que me ayuda a entender mis propios errores.
+        </p>
+      </div>
+      <iframe style="border-radius:0; margin-top:15px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX56idm9u6898?utm_source=generator" width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+    </section>
+  </a>
+
+  <a href="fotos.html" class="grid-full-width">
+    <section class="section-fotos">
+      <div class="polaroid" style="transform: rotate(-3deg);">
+        <img src="https://images.unsplash.com/photo-1499028344343-cd173ffc68a9?q=80&w=300&h=300&fit=crop" alt="Cielo">
+        <p>Aquel atardecer</p>
+      </div>
+      <div class="polaroid" style="transform: rotate(2deg); margin-top: 10px;">
+        <img src="https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=300&h=300&fit=crop" alt="Libro">
+        <p>Café y tinta</p>
+      </div>
+      <div class="polaroid" style="transform: rotate(-1deg);">
+        <img src="https://images.unsplash.com/photo-1516410529446-2c777cb7366d?q=80&w=300&h=300&fit=crop" alt="Flores">
+        <p>Alelíes de marzo</p>
+      </div>
+    </section>
+  </a>
+
+  <a href="libros.html" class="grid-half-width">
+    <section class="section-libros" style="position: relative;">
+      <div class="paper-clip"></div>
+      <span class="label">Control de Lectura</span>
+      <div class="book-entry">
+        <span class="book-title">Cien años de soledad</span>
+        <p style="font-size: 0.8rem;">Análisis: El tiempo circular como condena. ¿Es posible escapar del nombre que nos precede?</p>
+      </div>
+      <div class="book-entry">
+        <span class="book-title">La náusea - Sartre</span>
+        <p style="font-size: 0.8rem;">Nota: La existencia precede a la esencia, pero ¡qué peso tiene esa libertad!</p>
+      </div>
+    </section>
+  </a>
+
+  <a href="favoritos.html" class="grid-half-width">
+  <section class="section-favoritos">
+    <div class="tape-decoration" style="background: rgba(0,0,0,0.1); left: auto; right: 20px;"></div>
+    <span class="label" style="color: #6d5b46;">Versos Ajenos</span>
+    <p style="margin-top: 15px;">
+      "Podrá faltarme el aire,<br>
+      el sueño, el canto, el habla,<br>
+      pero no me faltará tu sombra..."
+    </p>
+    <p style="text-align: right; font-family: 'Special Elite'; font-size: 0.7rem; margin-top: 10px;">— Angel González</p>
+  </section>
+ </a>
+
+</div>
+
+</body>
+</html>
