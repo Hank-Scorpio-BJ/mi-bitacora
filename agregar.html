@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agregar contenido</title>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=La+Belle+Aurore&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --paper: #f4eee1;
+    --ink: #2c2927;
+    --accent-red: #a64d4d;
+    --gold: #b39665;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #3d352d;
+    background-image: url('https://www.transparenttextures.com/patterns/dark-wood.png');
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    padding: 20px;
+  }
+  .card {
+    background: var(--paper);
+    max-width: 560px;
+    width: 100%;
+    padding: 50px 40px;
+    box-shadow: 3px 5px 20px rgba(0,0,0,0.4);
+  }
+  .card h1 {
+    font-family: 'La Belle Aurore', cursive;
+    font-size: 2.2rem;
+    color: var(--accent-red);
+    margin: 0 0 30px;
+  }
+  label {
+    display: block;
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.7rem;
+    color: #666;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    margin-top: 18px;
+  }
+  input, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    border: 1px solid #d4c5a9;
+    background: #fffdf8;
+    color: var(--ink);
+  }
+  textarea { min-height: 160px; resize: vertical; font-style: italic; }
+  .btn {
+    margin-top: 28px;
+    padding: 12px 24px;
+    background: var(--accent-red);
+    color: white;
+    border: none;
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .cancelar {
+    margin-top: 28px;
+    margin-left: 10px;
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.8rem;
+    color: #888;
+    text-decoration: none;
+  }
+  .mensaje {
+    margin-top: 16px;
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.75rem;
+  }
+  .mensaje.error { color: #a64d4d; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1 id="titulo-form">Agregar</h1>
+  <form id="form-item"></form>
+  <p class="mensaje error" id="mensaje"></p>
+</div>
+
+<script src="supabase-client.js"></script>
+<script>
+  // Definición de campos por sección: tabla + lista de campos del formulario
+  const SECCIONES = {
+    poemas: {
+      label: "poema", tabla: "poemas",
+      campos: [
+        { id: "titulo", tipo: "text", label: "Título", requerido: true },
+        { id: "fecha", tipo: "text", label: "Fecha (texto libre)", placeholder: "ej: 12 de Julio, 2026" },
+        { id: "texto", tipo: "textarea", label: "Texto del poema", requerido: true },
+        { id: "nota", tipo: "text", label: "Nota al pie" }
+      ]
+    },
+    musica: {
+      label: "álbum", tabla: "canciones",
+      campos: [
+        { id: "album", tipo: "text", label: "Álbum", requerido: true },
+        { id: "artista", tipo: "text", label: "Artista" },
+        { id: "anio", tipo: "text", label: "Año" },
+        { id: "resena", tipo: "textarea", label: "Tu reseña" }
+      ]
+    },
+    libros: {
+      label: "libro", tabla: "libros",
+      campos: [
+        { id: "titulo", tipo: "text", label: "Título", requerido: true },
+        { id: "autor", tipo: "text", label: "Autor" },
+        { id: "analisis", tipo: "textarea", label: "Tu análisis" },
+        { id: "valoracion", tipo: "text", label: "Valoración", placeholder: "ej: ★★★★☆" }
+      ]
+    },
+    fotos: {
+      label: "foto", tabla: "fotos",
+      campos: [
+        { id: "url_imagen", tipo: "text", label: "URL de la imagen", requerido: true, placeholder: "https://..." },
+        { id: "leyenda", tipo: "text", label: "Leyenda" }
+      ]
+    },
+    favoritos: {
+      label: "favorito", tabla: "favoritos",
+      campos: [
+        { id: "cita", tipo: "textarea", label: "Cita o verso", requerido: true },
+        { id: "autor", tipo: "text", label: "Autor" }
+      ]
+    }
+  };
+
+  const params = new URLSearchParams(window.location.search);
+  const seccion = params.get('seccion') || 'poemas';
+  const config = SECCIONES[seccion] || SECCIONES.poemas;
+
+  document.getElementById('titulo-form').textContent = `Nuevo ${config.label}`;
+
+  const form = document.getElementById('form-item');
+  form.innerHTML = config.campos.map(c => `
+    <label for="${c.id}">${c.label}</label>
+    ${c.tipo === 'textarea'
+      ? `<textarea id="${c.id}" ${c.requerido ? 'required' : ''} placeholder="${c.placeholder || ''}"></textarea>`
+      : `<input type="text" id="${c.id}" ${c.requerido ? 'required' : ''} placeholder="${c.placeholder || ''}">`}
+  `).join('') + `
+    <button type="submit" class="btn">Guardar en mi muro</button>
+    <a href="muro.html?seccion=${seccion}" class="cancelar" id="link-cancelar">Cancelar</a>
+  `;
+
+  let username = null;
+
+  (async () => {
+    const sesion = await obtenerSesionActual();
+    if (!sesion) { window.location.href = "login.html"; return; }
+
+    const { data: perfil } = await supabaseClient
+      .from('perfiles')
+      .select('username')
+      .eq('id', sesion.user.id)
+      .single();
+
+    username = perfil?.username;
+    document.getElementById('link-cancelar').href = `muro.html?usuario=${username}&seccion=${seccion}`;
+  })();
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const sesion = await obtenerSesionActual();
+    if (!sesion) { window.location.href = "login.html"; return; }
+
+    const datos = { user_id: sesion.user.id };
+    config.campos.forEach(c => {
+      datos[c.id] = document.getElementById(c.id).value.trim();
+    });
+
+    const { error } = await supabaseClient.from(config.tabla).insert(datos);
+
+    if (error) {
+      document.getElementById('mensaje').textContent = "No se pudo guardar: " + error.message;
+      return;
+    }
+
+    window.location.href = `muro.html?usuario=${username}&seccion=${seccion}`;
+  });
+</script>
+
+</body>
+</html>

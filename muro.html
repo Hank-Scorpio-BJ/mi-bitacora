@@ -44,6 +44,29 @@
     padding: 6px 12px;
     cursor: pointer;
   }
+  .tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+  }
+  .tab {
+    font-family: 'Special Elite', sans-serif;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    color: white;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 4px 4px 0 0;
+    opacity: 0.6;
+  }
+  .tab.activa { opacity: 1; box-shadow: 0 -2px 6px rgba(0,0,0,0.2); }
+  .tab-poemas { background: #a64d4d; }
+  .tab-musica { background: #5d7a8c; }
+  .tab-libros { background: #8c3b3b; }
+  .tab-fotos { background: #4a3b31; }
+  .tab-favoritos { background: #6d5b46; }
+
   .sheet {
     background: var(--paper);
     background-image: linear-gradient(var(--line-blue) 1px, transparent 1px);
@@ -80,7 +103,7 @@
     color: var(--accent);
     margin: 0 0 15px 0;
   }
-  .poem-body {
+  .cuerpo {
     font-size: 1.3rem;
     line-height: 1.6em;
     color: var(--ink);
@@ -93,6 +116,13 @@
     margin-top: 12px;
     opacity: 0.6;
     text-align: right;
+  }
+  .foto-img {
+    width: 100%;
+    max-width: 300px;
+    display: block;
+    margin-bottom: 10px;
+    filter: sepia(0.2);
   }
   .vacio {
     font-family: 'Special Elite', sans-serif;
@@ -108,30 +138,52 @@
 <div class="wrapper">
   <div class="top-bar">
     <a href="directorio.html" class="back-btn">← Todos los muros</a>
-    <a id="btn-agregar" href="agregar-poema.html" class="accion-btn" style="display:none; text-decoration:none;">+ Agregar poema</a>
+    <a id="btn-agregar" href="#" class="accion-btn" style="display:none; text-decoration:none;">+ Agregar</a>
   </div>
+
+  <div class="tabs" id="tabs"></div>
 
   <main class="sheet">
     <h1 class="dueno" id="nombre-dueno">Cargando...</h1>
-    <div id="contenedor-poemas"></div>
+    <div id="contenedor"></div>
   </main>
 </div>
 
 <script src="supabase-client.js"></script>
 <script>
+  // Configuración de cada sección: tabla, campos y cómo renderizarlos
+  const SECCIONES = {
+    poemas:    { label: "Poemas",     tabla: "poemas",    titulo: "titulo", cuerpo: "texto", fecha: "fecha", nota: "nota" },
+    musica:    { label: "Música",     tabla: "canciones", titulo: "album",  cuerpo: "resena", fecha: "anio", nota: "artista" },
+    libros:    { label: "Libros",     tabla: "libros",    titulo: "titulo", cuerpo: "analisis", fecha: null, nota: "autor" },
+    fotos:     { label: "Fotos",      tabla: "fotos",     titulo: "leyenda", cuerpo: null, fecha: null, nota: null, esFoto: true },
+    favoritos: { label: "Favoritos",  tabla: "favoritos", titulo: null, cuerpo: "cita", fecha: null, nota: "autor" }
+  };
+
+  const params = new URLSearchParams(window.location.search);
+  const username = params.get('usuario');
+  const seccion = params.get('seccion') || 'poemas';
+  const config = SECCIONES[seccion] || SECCIONES.poemas;
+
+  // Armamos las pestañas
+  const tabsEl = document.getElementById('tabs');
+  tabsEl.innerHTML = Object.keys(SECCIONES).map(key => `
+    <a class="tab tab-${key} ${key === seccion ? 'activa' : ''}"
+       href="muro.html?usuario=${encodeURIComponent(username || '')}&seccion=${key}">
+      ${SECCIONES[key].label}
+    </a>
+  `).join('');
+
   (async () => {
-    const params = new URLSearchParams(window.location.search);
-    const username = params.get('usuario');
-    const contenedor = document.getElementById('contenedor-poemas');
+    const contenedor = document.getElementById('contenedor');
     const nombreDueno = document.getElementById('nombre-dueno');
 
     if (!username) {
       nombreDueno.textContent = "Muro no encontrado";
-      contenedor.innerHTML = '<p class="vacio">Agregá ?usuario=nombre a la URL, o entrá desde el directorio.</p>';
+      contenedor.innerHTML = '<p class="vacio">Entrá desde el directorio para ver un muro.</p>';
       return;
     }
 
-    // Buscamos el perfil dueño de este muro
     const { data: perfil, error: errorPerfil } = await supabaseClient
       .from('perfiles')
       .select('id, username, nombre_mostrado')
@@ -146,32 +198,42 @@
 
     nombreDueno.textContent = perfil.nombre_mostrado || perfil.username;
 
-    // Si el visitante logueado es el dueño, mostramos botón de agregar
     const sesion = await obtenerSesionActual();
+    const btnAgregar = document.getElementById('btn-agregar');
     if (sesion && sesion.user.id === perfil.id) {
-      document.getElementById('btn-agregar').style.display = 'inline-block';
+      btnAgregar.style.display = 'inline-block';
+      btnAgregar.href = `agregar.html?seccion=${seccion}`;
     }
 
-    // Traemos los poemas de ese usuario
-    const { data: poemas, error: errorPoemas } = await supabaseClient
-      .from('poemas')
-      .select('titulo, fecha, texto, nota, creado_en')
+    const { data: items, error: errorItems } = await supabaseClient
+      .from(config.tabla)
+      .select('*')
       .eq('user_id', perfil.id)
       .order('creado_en', { ascending: false });
 
-    if (errorPoemas || !poemas || poemas.length === 0) {
-      contenedor.innerHTML = '<p class="vacio">Todavía no hay poemas en este muro.</p>';
+    if (errorItems || !items || items.length === 0) {
+      contenedor.innerHTML = `<p class="vacio">Todavía no hay nada en "${config.label}".</p>`;
       return;
     }
 
-    contenedor.innerHTML = poemas.map(p => `
-      <article class="entry">
-        <span class="date">${p.fecha || ''}</span>
-        <h2 class="title">${p.titulo}</h2>
-        <div class="poem-body">${p.texto}</div>
-        ${p.nota ? `<div class="footnote">${p.nota}</div>` : ''}
-      </article>
-    `).join('');
+    contenedor.innerHTML = items.map(item => {
+      if (config.esFoto) {
+        return `
+          <article class="entry">
+            <img class="foto-img" src="${item.url_imagen}" alt="${item.leyenda || ''}">
+            <div class="footnote">${item.leyenda || ''}</div>
+          </article>
+        `;
+      }
+      return `
+        <article class="entry">
+          ${config.fecha ? `<span class="date">${item[config.fecha] || ''}</span>` : ''}
+          ${config.titulo ? `<h2 class="title">${item[config.titulo]}</h2>` : ''}
+          ${config.cuerpo ? `<div class="cuerpo">${item[config.cuerpo] || ''}</div>` : ''}
+          ${config.nota ? `<div class="footnote">${item[config.nota] || ''}</div>` : ''}
+        </article>
+      `;
+    }).join('');
   })();
 </script>
 
